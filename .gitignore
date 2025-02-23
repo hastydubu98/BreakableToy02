@@ -9,7 +9,7 @@
 
 # Package Files (any location)#
 # Must explicitly override in a .gitignore file in a sub directory (this is discouraged)
-# package files should be in nexus or built as a target from source
+# package files should be inΩ nexus or built as a target from source
 **/*.jar
 **/*.war
 **/*.ear
