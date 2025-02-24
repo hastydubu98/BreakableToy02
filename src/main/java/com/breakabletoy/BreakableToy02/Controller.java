@@ -142,4 +142,31 @@ public class Controller {
         // Return the response body (Spotify API response in JSON)
         return response;
     }
+
+    @GetMapping("/spotify/search")
+    public ResponseEntity<String> searchSpotify(
+            @RequestParam String query,
+            @RequestParam String type) {
+
+        String accessToken = tokenStorage.getAccessToken();
+
+        // Spotify API search endpoint
+        String url = "https://api.spotify.com/v1/search?q=" + query + "&type=" + type + "&limit=10"; // Limit to 10 results
+
+        // Set up the Authorization header with the Bearer token
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + accessToken);  // Include the Bearer token
+
+        // Set up the HTTP entity with the headers
+        HttpEntity<String> entity = new HttpEntity<>(headers);
+
+        // Create a RestTemplate to make the HTTP request
+        RestTemplate restTemplate = new RestTemplate();
+
+        // Send the GET request to the Spotify API to retrieve search results
+        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
+
+        // Return the response body (Spotify API response in JSON)
+        return response;
+    }
 }
