@@ -116,4 +116,30 @@ public class Controller {
         // Return the response body
         return response;
     }
+
+    // Endpoint to get album information from the Spotify API
+    @GetMapping("/spotify/album/{id}")
+    public ResponseEntity<String> getAlbumInfo(@PathVariable String id) {
+
+        String accessToken = tokenStorage.getAccessToken();
+
+        // Spotify API endpoint to get album details
+        String url = "https://api.spotify.com/v1/albums/" + id;
+
+        // Set up the authorization header with the access token (Bearer token)
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + accessToken);  // Include the Bearer token
+
+        // Set up the HTTP entity with the authorization header
+        HttpEntity<String> entity = new HttpEntity<>(headers);
+
+        // Create a RestTemplate to make the HTTP request
+        RestTemplate restTemplate = new RestTemplate();
+
+        // Send the GET request to Spotify API to retrieve the album's information
+        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
+
+        // Return the response body (Spotify API response in JSON)
+        return response;
+    }
 }
