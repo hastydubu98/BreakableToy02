@@ -8,7 +8,9 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
+import java.net.URI;
 import java.util.Base64;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -50,44 +52,44 @@ public class Controller {
     }
 
     // Step 2: Handle the callback from Spotify after user authentication
-    @GetMapping("auth/spotify/callback")
-    public ResponseEntity<Map<String, Object>> getSpotifyToken(@RequestParam String code) {
+    @GetMapping("/auth/spotify/callback")
+    public ResponseEntity<Void> spotifyCallback(@RequestParam("code") String code) {
+        String frontendRedirectUrl = "http://localhost:5173/callback?code=" + code;
+        HttpHeaders headers = new HttpHeaders();
+        headers.setLocation(URI.create(frontendRedirectUrl));
+        return new ResponseEntity<>(headers, HttpStatus.FOUND);
+    }
+
+    @PostMapping("/auth/spotify/exchange")
+    public ResponseEntity<Map<String, Object>> exchangeToken(@RequestParam("code") String code) {
         String url = "https://accounts.spotify.com/api/token";
 
-        // Encode client_id:client_secret to Base64
-        String credentials = clientId + ":" + clientSecret;
-        String encodedCredentials = Base64.getEncoder().encodeToString(credentials.getBytes());
-
-        // Set HTTP headers
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-        headers.set("Authorization", "Basic " + encodedCredentials);
+        headers.setBasicAuth(clientId, clientSecret); // Use Client ID & Secret
 
-        // Set request body
-        String requestBody = "grant_type=authorization_code" +
-                "&code=" + code +
-                "&redirect_uri=" + redirectUri;
+        String requestBody = "grant_type=authorization_code"
+                + "&code=" + code
+                + "&redirect_uri=http://localhost:8080/auth/spotify/callback"; // Must match Spotify settings
 
-        // Make request
         RestTemplate restTemplate = new RestTemplate();
         HttpEntity<String> request = new HttpEntity<>(requestBody, headers);
         ResponseEntity<Map> response = restTemplate.exchange(url, HttpMethod.POST, request, Map.class);
 
         Map<String, Object> responseBody = response.getBody();
         if (responseBody != null && responseBody.containsKey("access_token")) {
-            String accessToken = (String) responseBody.get("access_token");
-            String refreshToken = (String) responseBody.get("refresh_token");
+            String token = (String) responseBody.get("access_token");
             int expiresIn = (int) responseBody.get("expires_in");
 
-            // Save token in memory (or session)
-            tokenStorage.saveToken(accessToken, expiresIn);
-            tokenStorage.saveRefreshToken(refreshToken);
+            // Store token for later use
+            tokenStorage.saveToken(token, expiresIn);
 
-            // You can now use this access token to make API calls to get user data.
+            return ResponseEntity.ok(responseBody);
         }
 
-        return ResponseEntity.ok(response.getBody());
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Collections.singletonMap("error", "Invalid authorization code"));
     }
+
 
     @GetMapping("/me/top/artists")
     public ResponseEntity<String> getTopArtists() {
