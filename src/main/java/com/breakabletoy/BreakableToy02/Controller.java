@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
 import java.util.Base64;
@@ -34,13 +35,18 @@ public class Controller {
 
     // Step 1: Redirect the user to Spotify's authorization page
     @PostMapping("/auth/spotify")
-    public void redirectToSpotifyAuth(HttpServletResponse response) throws IOException {
-        String authorizationUrl = "https://accounts.spotify.com/authorize?" +
-                "client_id=" + clientId + "&" +
-                "response_type=code&" +
-                "redirect_uri=" + redirectUri + "&" +
-                "scope=" + scope;
-        response.sendRedirect(authorizationUrl);
+    public ResponseEntity<Map<String, String>> initiateSpotifyLogin() {
+        // Generate Spotify authorization URL
+        String authUrl = UriComponentsBuilder.fromHttpUrl("https://accounts.spotify.com/authorize")
+                .queryParam("client_id", clientId)
+                .queryParam("response_type", "code")
+                .queryParam("redirect_uri", redirectUri)
+                .queryParam("scope", "user-top-read user-read-private") // Add any necessary scopes here
+                .queryParam("state", "state_parameter_passthrough_value") // Optional, can be used for CSRF protection
+                .toUriString();
+
+        // Return the URL to the frontend so it can redirect the user
+        return ResponseEntity.ok(Map.of("redirect_url", authUrl));
     }
 
     // Step 2: Handle the callback from Spotify after user authentication
@@ -84,37 +90,26 @@ public class Controller {
     }
 
     @GetMapping("/me/top/artists")
-    public List<Map<String, Object>> getTopArtists() {
+    public ResponseEntity<String> getTopArtists() {
         String accessToken = tokenStorage.getAccessToken();
+        String url = "https://api.spotify.com/v1/me/top/artists?limit=5";
         if (accessToken == null) {
             throw new RuntimeException("Access token is missing or expired. Please authenticate again.");
         }
-        return spotifyService.getTopArtists(accessToken);
+        return spotifyService.getInfo(accessToken, url);
     }
 
     @GetMapping("/spotify/artist/{id}")
     public ResponseEntity<String> getArtistInfo(@PathVariable String id) {
 
+        String accessToken = tokenStorage.getAccessToken();
         // Spotify API endpoint to get artist details
         String url = "https://api.spotify.com/v1/artists/" + id;
 
-        String accessToken = tokenStorage.getAccessToken();
-
-        // Set up the authorization header with the access token
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", "Bearer " + accessToken);  // Include the Bearer token
-
-        // Set up the HTTP entity with the authorization header
-        HttpEntity<String> entity = new HttpEntity<>(headers);
-
-        // Create a RestTemplate to make the HTTP request
-        RestTemplate restTemplate = new RestTemplate();
-
-        // Send the GET request to Spotify API to retrieve the artist's information
-        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
-
-        // Return the response body
-        return response;
+        if (accessToken == null) {
+            throw new RuntimeException("Access token is missing or expired. Please authenticate again.");
+        }
+        return spotifyService.getInfo(accessToken, url);
     }
 
     // Endpoint to get album information from the Spotify API
@@ -126,21 +121,10 @@ public class Controller {
         // Spotify API endpoint to get album details
         String url = "https://api.spotify.com/v1/albums/" + id;
 
-        // Set up the authorization header with the access token (Bearer token)
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", "Bearer " + accessToken);  // Include the Bearer token
-
-        // Set up the HTTP entity with the authorization header
-        HttpEntity<String> entity = new HttpEntity<>(headers);
-
-        // Create a RestTemplate to make the HTTP request
-        RestTemplate restTemplate = new RestTemplate();
-
-        // Send the GET request to Spotify API to retrieve the album's information
-        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
-
-        // Return the response body (Spotify API response in JSON)
-        return response;
+        if (accessToken == null) {
+            throw new RuntimeException("Access token is missing or expired. Please authenticate again.");
+        }
+        return spotifyService.getInfo(accessToken, url);
     }
 
     @GetMapping("/spotify/search")
@@ -153,20 +137,9 @@ public class Controller {
         // Spotify API search endpoint
         String url = "https://api.spotify.com/v1/search?q=" + query + "&type=" + type + "&limit=10"; // Limit to 10 results
 
-        // Set up the Authorization header with the Bearer token
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", "Bearer " + accessToken);  // Include the Bearer token
-
-        // Set up the HTTP entity with the headers
-        HttpEntity<String> entity = new HttpEntity<>(headers);
-
-        // Create a RestTemplate to make the HTTP request
-        RestTemplate restTemplate = new RestTemplate();
-
-        // Send the GET request to the Spotify API to retrieve search results
-        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
-
-        // Return the response body (Spotify API response in JSON)
-        return response;
+        if (accessToken == null) {
+            throw new RuntimeException("Access token is missing or expired. Please authenticate again.");
+        }
+        return spotifyService.getInfo(accessToken, url);
     }
 }

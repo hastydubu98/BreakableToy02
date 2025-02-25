@@ -9,23 +9,22 @@ import java.util.Map;
 
 @Service
 public class SpotifyService {
-    private final String SPOTIFY_TOP_ARTISTS_URL = "https://api.spotify.com/v1/me/top/artists?limit=5"; // Change limit if needed
 
-    public List<Map<String, Object>> getTopArtists(String accessToken) {
+    public ResponseEntity<String> getInfo(String accessToken, String url) {
+        // Set up the authorization header with the access token
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + accessToken);  // Include the Bearer token
+
+        // Set up the HTTP entity with the authorization header
+        HttpEntity<String> entity = new HttpEntity<>(headers);
+
+        // Create a RestTemplate to make the HTTP request
         RestTemplate restTemplate = new RestTemplate();
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", "Bearer " + accessToken);
-        headers.setContentType(MediaType.APPLICATION_JSON);
+        // Send the GET request to Spotify API to retrieve the artist's information
+        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
 
-        HttpEntity<String> entity = new HttpEntity<>(headers);
-        ResponseEntity<Map> response = restTemplate.exchange(SPOTIFY_TOP_ARTISTS_URL, HttpMethod.GET, entity, Map.class);
-
-        if (response.getStatusCode() == HttpStatus.OK) {
-            Map<String, Object> body = response.getBody();
-            return (List<Map<String, Object>>) body.get("items");
-        }
-
-        return List.of();
+        // Return the response body
+        return response;
     }
 }
