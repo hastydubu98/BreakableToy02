@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import "./Login.css";
+import spotifyLogo from "./assets/Primary_Logo_Green_CMYK.svg";
 
 const Login: React.FC = () => {
 
@@ -20,8 +22,14 @@ const Login: React.FC = () => {
 
     return (
         <div className="login-container">
-            <h2>Login</h2>
-            <button onClick={handleLoginClick}>Login</button>
+          <div className="login-card">
+            <img src={spotifyLogo} alt="Spotify Logo" className="spotify-logo" />
+            <h2>Welcome!</h2>
+            <p>Sign in to continue</p>
+            <button onClick={handleLoginClick} className="login-button">
+              Log In
+            </button>
+          </div>
         </div>
    );
 };
