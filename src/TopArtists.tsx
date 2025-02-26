@@ -1,13 +1,7 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "./AuthContext"; // Import the Auth Context
 import { useNavigate } from "react-router-dom";
-import "./Dashboard.css";
-import spotifyLogo from "./assets/Primary_Logo_White_CMYK.svg";
-import homeIcon from "./assets/icons8-home.svg";
 import "./TopArtists.css";
-import TopArtists from "./TopArtists.jsx"
-import TopTracks from "./TopTracks.jsx"
-
 
 interface Artist {
     id: string;
@@ -17,7 +11,7 @@ interface Artist {
     external_urls: { spotify: string };
 }
 
-const Dashboard = () => {
+const TopArtists = () => {
     const { accessToken } = useAuth();
     const navigate = useNavigate();
     const [artists, setArtists] = useState<Artist[]>([]);
@@ -29,7 +23,7 @@ const Dashboard = () => {
             return;
         }
 
-        fetch("https://api.spotify.com/v1/me/top/artists", {
+        fetch("https://api.spotify.com/v1/me/top/artists?limit=10", {
             headers: { Authorization: `Bearer ${accessToken}` },
         })
             .then((response) => response.json())
@@ -46,24 +40,27 @@ const Dashboard = () => {
     }, [accessToken, navigate]);
 
     return (
-        <>
-            <body className="main-container">
-                <nav className="navbar">
-                  <div className="navbar-container">
-                    <a href="/" className="logo-link">
-                        <img src={spotifyLogo} alt="Spotify Logo" className="logo" />
-                    </a>
-                    <button className="home-button">
-                        <img src={homeIcon} alt="Home" className="home-icon" />
-                    </button>
-                    <input type="text" placeholder="Search..." className="search-input" />
-                  </div>
-                </nav>
-                <TopArtists />
-                <TopTracks />
-            </body>
-        </>
+        <div className="main-content">
+            <h1 className="">Your Top Artists</h1>
+            {loading ? (
+                <p>Loading...</p>
+            ) : artists.length === 0 ? (
+                <p>No artists found.</p>
+            ) : (
+                <div className="artists-container">
+                    {artists.map((artist) => (
+                    <div key={artist.id} className="artist-card">
+                        <img src={artist.images[0]?.url} alt={artist.name} className="artist-image" />
+                        <h3 className="">{artist.name}</h3>
+                        <a href={artist.external_urls.spotify} target="_blank" rel="noopener noreferrer">
+                            Listen on Spotify
+                        </a>
+                    </div>
+                    ))}
+                </div>
+            )}
+        </div>
     );
 };
 
-export default Dashboard;
+export default TopArtists;
