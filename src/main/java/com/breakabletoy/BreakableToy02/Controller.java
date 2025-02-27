@@ -54,7 +54,7 @@ public class Controller {
     // Step 2: Handle the callback from Spotify after user authentication
     @GetMapping("/auth/spotify/callback")
     public ResponseEntity<Void> spotifyCallback(@RequestParam("code") String code) {
-        String frontendRedirectUrl = "http://localhost:5173/callback?code=" + code;
+        String frontendRedirectUrl = "http://localhost:9090/callback?code=" + code;
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(URI.create(frontendRedirectUrl));
         return new ResponseEntity<>(headers, HttpStatus.FOUND);
@@ -90,14 +90,33 @@ public class Controller {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Collections.singletonMap("error", "Invalid authorization code"));
     }
 
-
     @GetMapping("/me/top/artists")
-    public ResponseEntity<String> getTopArtists() {
+    public ResponseEntity<String> getTopArtists(HttpServletResponse response) {
+        response.getHeaderNames().forEach(header -> {
+            System.out.println(header + ": " + response.getHeader(header));
+        });
+
         String accessToken = tokenStorage.getAccessToken();
-        String url = "https://api.spotify.com/v1/me/top/artists?limit=5";
+        String url = "https://api.spotify.com/v1/me/top/artists?limit=10";
         if (accessToken == null) {
             throw new RuntimeException("Access token is missing or expired. Please authenticate again.");
         }
+
+        return spotifyService.getInfo(accessToken, url);
+    }
+
+    @GetMapping("/me/top/tracks")
+    public ResponseEntity<String> getTopTracks(HttpServletResponse response) {
+        response.getHeaderNames().forEach(header -> {
+            System.out.println(header + ": " + response.getHeader(header));
+        });
+
+        String accessToken = tokenStorage.getAccessToken();
+        String url = "https://api.spotify.com/v1/me/top/tracks  ?limit=10";
+        if (accessToken == null) {
+            throw new RuntimeException("Access token is missing or expired. Please authenticate again.");
+        }
+
         return spotifyService.getInfo(accessToken, url);
     }
 
@@ -107,6 +126,19 @@ public class Controller {
         String accessToken = tokenStorage.getAccessToken();
         // Spotify API endpoint to get artist details
         String url = "https://api.spotify.com/v1/artists/" + id;
+
+        if (accessToken == null) {
+            throw new RuntimeException("Access token is missing or expired. Please authenticate again.");
+        }
+        return spotifyService.getInfo(accessToken, url);
+    }
+
+    @GetMapping("/spotify/artist/{id}/albums")
+    public ResponseEntity<String> getArtistAlbums(@PathVariable String id) {
+
+        String accessToken = tokenStorage.getAccessToken();
+        // Spotify API endpoint to get artist details
+        String url = "https://api.spotify.com/v1/artists/" + id + "/albums?limit=12";
 
         if (accessToken == null) {
             throw new RuntimeException("Access token is missing or expired. Please authenticate again.");
@@ -131,13 +163,12 @@ public class Controller {
 
     @GetMapping("/spotify/search")
     public ResponseEntity<String> searchSpotify(
-            @RequestParam String query,
-            @RequestParam String type) {
+            @RequestParam String query) {
 
         String accessToken = tokenStorage.getAccessToken();
 
         // Spotify API search endpoint
-        String url = "https://api.spotify.com/v1/search?q=" + query + "&type=" + type + "&limit=10"; // Limit to 10 results
+        String url = "https://api.spotify.com/v1/search?q=" + query + "&type=artist,album&limit=10"; // Limit to 10 results
 
         if (accessToken == null) {
             throw new RuntimeException("Access token is missing or expired. Please authenticate again.");

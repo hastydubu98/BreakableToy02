@@ -3,6 +3,9 @@ package com.breakabletoy.BreakableToy02;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -15,17 +18,18 @@ public class BreakableToy02Application {
 
 	// Add CORS configuration inside the main application class
 	@Bean
-	public WebMvcConfigurer corsConfigurer() {
-		return new WebMvcConfigurer() {
-			@Override
-			public void addCorsMappings(CorsRegistry registry) {
-				registry.addMapping("/**") // Apply to all endpoints
-						.allowedOrigins("http://localhost:5173") // Allow requests from localhost:3000
-						.allowedMethods("GET", "POST", "PUT", "DELETE") // Allow specific HTTP methods
-						.allowedHeaders("*") // Allow all headers
-						.allowCredentials(true); // Allow credentials (cookies, authorization headers, etc.)
-			}
-		};
+	public CorsFilter corsFilter() {
+
+		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+		CorsConfiguration config = new CorsConfiguration();
+		config.setAllowCredentials(false);
+		config.addAllowedOrigin("*");
+		config.addAllowedHeader("*");
+		config.addAllowedMethod("*");
+		source.registerCorsConfiguration("/**", config);
+		return new CorsFilter(source);
 	}
+
+
 
 }
