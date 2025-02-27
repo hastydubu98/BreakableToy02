@@ -25,9 +25,8 @@ const AlbumDetails = () => {
   useEffect(() => {
     if (!accessToken || !id) return;
 
-    fetch(`https://api.spotify.com/v1/albums/${id}`, {
-      headers: { Authorization: `Bearer ${accessToken}` },
-    })
+    fetch(`http://localhost:8080/spotify/album/${id}`
+    )
       .then((response) => response.json())
       .then((data) => {
         setAlbum(data);
@@ -51,7 +50,17 @@ const AlbumDetails = () => {
                     <img src={album.images[0]?.url} alt={album.name} className="album-cover" />
                     <div className="album-info">
                       <h1>{album.name}</h1>
-                      <p>By {album.artists.map((artist) => artist.name).join(", ")}</p>
+                      <p style={{ fontWeight: "bold", textDecoration: "underline"}}>
+                        By{" "}
+                        {album.artists.map((artist, index) => (
+                          <span key={artist.id}>
+                            <a href={`/artist/${artist.id}`} style={{ textDecoration: "none", color: "inherit", fontWeight: "bold" }}>
+                              {artist.name}
+                            </a>
+                            {index < album.artists.length - 1 ? ", " : ""}
+                          </span>
+                        ))}
+                      </p>
                       <p>Released: {album.release_date}</p>
                       <p>Total Tracks: {album.total_tracks}</p>
                       <button
@@ -68,7 +77,7 @@ const AlbumDetails = () => {
                       {album.tracks.items.map((track, index) => (
                         <li key={track.id}>
                             <a
-                                href={`https://open.spotify.com/track/${track.id}`} // Direct Spotify link
+                                href={`https://open.spotify.com/track/${track.id}`}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="track-link"

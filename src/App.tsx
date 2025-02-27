@@ -6,13 +6,14 @@ import Dashboard from "./Dashboard";
 import ArtistHeader from "./ArtistHeader";
 import AlbumDetails from "./AlbumDetails";
 import SearchResults from "./SearchResults.tsx";
+import PlaylistDetails from "./PlaylistDetails.tsx"
 
 
 function App() {
     return (
-        <div className="main-container">
+        <div>
             <Helmet>
-                <style>{'body { background: linear-gradient(to right, #121212, #1ED760); }'}</style>
+                <style>{'body { background: black}'}</style>
             </Helmet>
             <Router>
                 <Routes>
@@ -21,6 +22,8 @@ function App() {
                     <Route path="/dashboard" element={<Dashboard />} />
                     <Route path="/artist/:id" element={<ArtistHeader />} />
                     <Route path="/album/:id" element={<AlbumDetails />} />
+                    <Route path="/search" element={<SearchResults />} />
+                    <Route path="/playlist/:id" element={<PlaylistDetails />} />
                 </Routes>
             </Router>
         </div>

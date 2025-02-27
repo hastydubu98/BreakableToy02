@@ -26,9 +26,8 @@ const ArtistHeader = () => {
 
   useEffect(() => {
     if (id && accessToken) {
-      fetch(`https://api.spotify.com/v1/artists/${id}`, {
-        headers: { Authorization: `Bearer ${accessToken}` },
-      })
+      fetch(`http://localhost:8080/spotify/artist/${id}`
+      )
         .then((response) => response.json())
         .then((data) => {
           setArtist(data);

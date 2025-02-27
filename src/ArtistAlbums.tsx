@@ -20,9 +20,8 @@ const ArtistAlbums = () => {
   useEffect(() => {
     if (!accessToken || !id) return;
 
-    fetch(`https://api.spotify.com/v1/artists/${id}/albums?limit=12`, {
-      headers: { Authorization: `Bearer ${accessToken}` },
-    })
+    fetch(`http://localhost:8080/spotify/artist/${id}/albums`
+      )
       .then((response) => response.json())
       .then((data) => {
         if (data.items) {
@@ -54,7 +53,6 @@ const ArtistAlbums = () => {
               <img src={album.images[0]?.url} alt={album.name} className="album-image" />
               <div className="album-info">
                 <h3>{album.name}</h3>
-                <p>{album.release_date}</p>
               </div>
             </a>
           ))}

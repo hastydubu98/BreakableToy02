@@ -17,12 +17,27 @@ interface Album {
   artists: { name: string }[];
 }
 
+interface Track {
+  id: string;
+  name: string;
+  album: { images: { url: string }[] };
+  artists: { name: string }[];
+}
+
+interface Playlist {
+  id: string;
+  name: string;
+  images: { url: string }[];
+}
+
 const SearchResults = () => {
   const { accessToken } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
   const [artists, setArtists] = useState<Artist[]>([]);
   const [albums, setAlbums] = useState<Album[]>([]);
+  const [tracks, setTracks] = useState<Track[]>([]);
+  const [playlists, setPlaylists] = useState<Playlist[]>([]);
   const [loading, setLoading] = useState(true);
 
   const searchParams = new URLSearchParams(location.search);
@@ -31,13 +46,14 @@ const SearchResults = () => {
   useEffect(() => {
     if (!query || !accessToken) return;
 
-    fetch(`https://api.spotify.com/v1/search?q=${query}&type=artist,album&limit=10`, {
-      headers: { Authorization: `Bearer ${accessToken}` },
-    })
+    fetch(`http://localhost:8080/spotify/search?query=${query}`)
       .then((response) => response.json())
       .then((data) => {
+        console.log(data.playlists)
         setArtists(data.artists?.items || []);
         setAlbums(data.albums?.items || []);
+        setTracks(data.tracks?.items || []);
+        setPlaylists(data.playlists?.items?.filter((playlist: Playlist) => playlist && playlist.images) || []);
         setLoading(false);
       })
       .catch((error) => {
@@ -80,6 +96,36 @@ const SearchResults = () => {
                     <div key={album.id} className="result-card" onClick={() => navigate(`/album/${album.id}`)}>
                       <img src={album.images[0]?.url} alt={album.name} className="result-image" />
                       <p>{album.name} - {album.artists[0]?.name}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Tracks Section */}
+            {tracks.length > 0 && (
+              <div className="results-section">
+                <h2>Tracks</h2>
+                <div className="results-grid">
+                  {tracks.map((track) => (
+                    <div key={track.id} className="result-card" onClick={() => window.location.href = `https://open.spotify.com/track/${track.id}`}>
+                      <img src={track.album.images[0]?.url} alt={track.name} className="result-image" />
+                      <p>{track.name} - {track.artists[0]?.name}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Playlists Section */}
+            {playlists.length > 0 && (
+              <div className="results-section">
+                <h2>Playlists</h2>
+                <div className="results-grid">
+                  {playlists.map((playlist) => (
+                    <div key={playlist.id} className="result-card" onClick={() => navigate(`/playlist/${playlist.id}`)}>
+                        <img src={playlist.images?.[0]?.url || "default-placeholder.png"} alt={playlist.name} className="result-image" />
+                        <p>{playlist.name}</p>
                     </div>
                   ))}
                 </div>

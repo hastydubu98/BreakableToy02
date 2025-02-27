@@ -23,24 +23,27 @@ const TopTracks = () => {
             return;
         }
 
-        fetch("https://api.spotify.com/v1/me/top/tracks?limit=10", {
-            headers: { Authorization: `Bearer ${accessToken}` },
+        fetch("http://localhost:8080/me/top/tracks", {
+                        method: "GET",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
         })
-            .then((response) => response.json())
-            .then((data) => {
-                if (data.items) {
-                    setTracks(data.items); // Set tracks data instead of artists
-                }
+        .then((response) => response.json())
+        .then((data) => {
+            if (data.items) {
+                setTracks(data.items); // Set tracks data instead of artists
+            }
                 setLoading(false);
-            })
-            .catch((error) => {
-                console.error("Error fetching top tracks:", error);
-                setLoading(false);
-            });
+        })
+        .catch((error) => {
+            console.error("Error fetching top tracks:", error);
+            setLoading(false);
+        });
     }, [accessToken, navigate]);
 
     return (
-        <div>
+        <div className="main-content">
             <h1>Your Top Tracks</h1>
             {loading ? (
                 <p>Loading...</p>

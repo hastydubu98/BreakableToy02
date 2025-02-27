@@ -23,9 +23,12 @@ const TopArtists = () => {
             return;
         }
 
-        fetch("https://api.spotify.com/v1/me/top/artists?limit=10", {
-            headers: { Authorization: `Bearer ${accessToken}` },
-        })
+        fetch("http://localhost:8080/me/top/artists", {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            })
             .then((response) => response.json())
             .then((data) => {
                 if (data.items) {
@@ -37,6 +40,8 @@ const TopArtists = () => {
                 console.error("Error fetching top artists:", error);
                 setLoading(false);
             });
+
+
     }, [accessToken, navigate]);
 
 const handleImageClick = (artistId: string) => {
