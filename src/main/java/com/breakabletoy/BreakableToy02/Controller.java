@@ -161,6 +161,20 @@ public class Controller {
         return spotifyService.getInfo(accessToken, url);
     }
 
+    @GetMapping("/spotify/playlists/{id}")
+    public ResponseEntity<String> getPlaylistInfo(@PathVariable String id) {
+
+        String accessToken = tokenStorage.getAccessToken();
+
+        // Spotify API endpoint to get album details
+        String url = "https://api.spotify.com/v1/playlists/" + id;
+
+        if (accessToken == null) {
+            throw new RuntimeException("Access token is missing or expired. Please authenticate again.");
+        }
+        return spotifyService.getInfo(accessToken, url);
+    }
+
     @GetMapping("/spotify/search")
     public ResponseEntity<String> searchSpotify(
             @RequestParam String query) {
@@ -168,7 +182,7 @@ public class Controller {
         String accessToken = tokenStorage.getAccessToken();
 
         // Spotify API search endpoint
-        String url = "https://api.spotify.com/v1/search?q=" + query + "&type=artist,album&limit=10"; // Limit to 10 results
+        String url = "https://api.spotify.com/v1/search?q=" + query + "&type=artist,album,playlist,track&limit=10"; // Limit to 10 results
 
         if (accessToken == null) {
             throw new RuntimeException("Access token is missing or expired. Please authenticate again.");
