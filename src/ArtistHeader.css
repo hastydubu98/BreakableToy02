@@ -47,12 +47,12 @@
   font-weight: bold;
   z-index: 1;
   text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.7);
-  margin-left: -58px;
+  margin-left: -59px;
 }
 
 .artist-info {
   padding: 20px;
-  margin-top: 250px;
+  margin-top: 230px;
   border-radius: 0 0 10px 10px;
   width: fit-content;
   max-width: 500px;
@@ -74,17 +74,20 @@
   height: 50px;
   background-color: #1db954;
   border-radius: 50%;
-  text-decoration: none;
+  border: none;
+  cursor: pointer;
   transition: transform 0.2s ease-in-out;
+  outline: none;
+  margin-left: -130px;
 }
 
 .spotify-button:hover {
-  transform: scale(1.1); /* Slight zoom effect */
+  transform: scale(1.1);
 }
 
 .spotify-button img {
-  width: 15px; /* Adjust play icon size */
-  height: 15px;
+  width: 150%;
+  height: auto;
 }
 
 

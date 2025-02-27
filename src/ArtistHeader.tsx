@@ -64,15 +64,12 @@ const ArtistHeader = () => {
         </div>
         <div className="artist-info">
           <p><strong>Followers:</strong> {artist.followers.total.toLocaleString()}</p>
-
-          <a
-            href={artist.external_urls.spotify}
-            target="_blank"
-            rel="noopener noreferrer"
+          <button
+            onClick={() => window.open(artist.external_urls.spotify, "_blank")}
             className="spotify-button"
           >
-            <img src={playButtonIcon} alt="Play Button"/>
-          </a>
+            <img src={playButtonIcon} alt="Play Button" />
+          </button>
         </div>
       </div>
       <ArtistAlbums />

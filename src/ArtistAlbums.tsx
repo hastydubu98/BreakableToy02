@@ -48,9 +48,7 @@ const ArtistAlbums = () => {
           {albums.map((album) => (
             <a
               key={album.id}
-              href={album.external_urls.spotify}
-              target="_blank"
-              rel="noopener noreferrer"
+              href={`/album/${album.id}`}
               className="album-card"
             >
               <img src={album.images[0]?.url} alt={album.name} className="album-image" />

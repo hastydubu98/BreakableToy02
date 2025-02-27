@@ -1,9 +1,12 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Helmet } from "react-helmet";
 import Login from "./Login";
 import Callback from "./Callback";
 import Dashboard from "./Dashboard";
 import ArtistHeader from "./ArtistHeader";
-import { Helmet } from "react-helmet";
+import AlbumDetails from "./AlbumDetails";
+import SearchResults from "./SearchResults.tsx";
+
 
 function App() {
     return (
@@ -17,6 +20,7 @@ function App() {
                     <Route path="/callback" element={<Callback />} />
                     <Route path="/dashboard" element={<Dashboard />} />
                     <Route path="/artist/:id" element={<ArtistHeader />} />
+                    <Route path="/album/:id" element={<AlbumDetails />} />
                 </Routes>
             </Router>
         </div>
