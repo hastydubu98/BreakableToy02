@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useAuth } from "./AuthContext"; // Import the Auth Context
+import { useAuth } from "./AuthContext";
 import { useNavigate } from "react-router-dom";
 import "./TopArtists.css";
 
@@ -39,6 +39,10 @@ const TopArtists = () => {
             });
     }, [accessToken, navigate]);
 
+const handleImageClick = (artistId: string) => {
+    navigate(`/artist/${artistId}`); // Navigate to the artist's details page
+};
+
     return (
         <div className="main-content">
             <h1 className="">Your Top Artists</h1>
@@ -50,7 +54,12 @@ const TopArtists = () => {
                 <div className="artists-container">
                     {artists.map((artist) => (
                     <div key={artist.id} className="artist-card">
-                        <img src={artist.images[0]?.url} alt={artist.name} className="artist-image" />
+                        <img
+                            src={artist.images[0]?.url}
+                            alt={artist.name}
+                            className="artist-image"
+                            onClick={() => handleImageClick(artist.id)}
+                        />
                         <h3 className="">{artist.name}</h3>
                         <a href={artist.external_urls.spotify} target="_blank" rel="noopener noreferrer">
                             Listen on Spotify

@@ -1,0 +1,70 @@
+/* General navbar styling */
+.navbar {
+  width: 100%;
+  position: fixed; /* Makes navbar stay at the top */
+  top: 0;
+  left: 0;
+  background-color: black;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Optional, adds a shadow */
+  z-index: 1000; /* Keeps it on top of other content */
+}
+
+.navbar-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 60px; /* Adjust height as needed */
+  padding: 0 20px;
+}
+
+.logo-link {
+  position: absolute;
+  left: 30px;
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+   height: 35px;
+   object-fit: contain;
+   cursor: pointer; /* Adds pointer effect when hovering */
+ }
+
+.search-input {
+  width: 50%; /* Adjust the width of the search bar */
+  max-width: 500px; /* Maximum width of the search bar */
+  padding: 8px 15px;
+  border-radius: 20px;
+  border: 1px solid #ccc;
+  outline: none;
+  color: #1f1f1f
+}
+
+.search-input:focus {
+  border-color: #1db954; /* Spotify green when focused */
+}
+
+.home-button {
+  width: 50px;
+  height: 50px;
+  background-color: #1f1f1f;
+  color: white;
+  border: none;
+  border-radius: 40%; /* Makes it round */
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 10px; /* Adds space between the button and the right edge */
+}
+
+.home-icon {
+  height: 25px; /* Adjust the size of the home icon */
+  width: 25px;
+  object-fit: contain; /* Ensures the image maintains its aspect ratio */
+}
+
+
+.home-button:hover {
+  background-color: #2a2a2a;
+}
