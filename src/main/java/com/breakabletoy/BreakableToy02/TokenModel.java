@@ -15,6 +15,7 @@ public class TokenModel {
 
     public void saveRefreshToken(String refreshToken) {
         this.refreshToken = refreshToken;
+        System.out.print(refreshToken);
     }
 
     public String getAccessToken() {
@@ -26,6 +27,10 @@ public class TokenModel {
 
     public boolean isTokenValid() {
         return accessToken != null && System.currentTimeMillis() < expiresAt;
+    }
+
+    public String getRefreshToken() {
+        return refreshToken;
     }
 
 }
