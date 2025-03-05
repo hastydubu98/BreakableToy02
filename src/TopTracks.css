@@ -24,6 +24,10 @@
   scroll-snap-align: start;
 }
 
+.track-card:last-child {
+  margin-right: 50px;
+}
+
 .track-card:hover {
   transform: scale(1.05);
 }
@@ -38,21 +42,21 @@
 .track-card h3 {
   margin: 10px 0;
   font-size: 18px;
-  white-space: nowrap; /* Prevents wrapping of the text */
-  overflow: hidden; /* Hides overflowing text */
-  text-overflow: ellipsis; /* Adds "..." when the text overflows */
-  width: 100%; /* Ensures the title takes up the full width of its container */
-  display: block; /* Make sure the element behaves like a block */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+  display: block;
 }
 
 .track-card p {
   font-size: 13px;
   opacity: 0.8;
-  white-space: nowrap; /* Prevents wrapping of the text */
-  overflow: hidden; /* Hides overflowing text */
-  text-overflow: ellipsis; /* Adds "..." when the text overflows */
-  width: 100%; /* Ensures the title takes up the full width of its container */
-  display: block; /* Make sure the element behaves like a block */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+  display: block;
 }
 
 .track-card a {

@@ -13,7 +13,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 60px; /* Adjust height as needed */
+  height: 60px;
   padding: 0 20px;
 }
 
@@ -27,12 +27,12 @@
 .logo {
    height: 35px;
    object-fit: contain;
-   cursor: pointer; /* Adds pointer effect when hovering */
+   cursor: pointer;
  }
 
 .search-input {
-  width: 50%; /* Adjust the width of the search bar */
-  max-width: 500px; /* Maximum width of the search bar */
+  width: 50%;
+  max-width: 500px;
   padding: 8px 15px;
   border-radius: 20px;
   border: 1px solid #ccc;
@@ -50,12 +50,12 @@
   background-color: #1f1f1f;
   color: white;
   border: none;
-  border-radius: 40%; /* Makes it round */
+  border-radius: 40%;
   cursor: pointer;
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-right: 10px; /* Adds space between the button and the right edge */
+  margin-right: 10px;
 }
 
 .home-icon {

@@ -13,7 +13,7 @@ function App() {
     return (
         <div>
             <Helmet>
-                <style>{'body { background: black}'}</style>
+                <style>{'body { background: #1D1B1B}'}</style>
             </Helmet>
             <Router>
                 <Routes>

@@ -1,3 +1,4 @@
+import React from "react";
 import { useEffect, useState } from "react";
 import { useAuth } from "./AuthContext";
 import { useNavigate } from "react-router-dom";
@@ -45,7 +46,7 @@ const TopArtists = () => {
     }, [accessToken, navigate]);
 
 const handleImageClick = (artistId: string) => {
-    navigate(`/artist/${artistId}`); // Navigate to the artist's details page
+    navigate(`/artist/${artistId}`);
 };
 
     return (

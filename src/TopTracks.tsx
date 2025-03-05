@@ -1,25 +1,25 @@
 import { useEffect, useState } from "react";
-import { useAuth } from "./AuthContext"; // Import the Auth Context
+import { useAuth } from "./AuthContext";
 import { useNavigate } from "react-router-dom";
 import "./TopTracks.css";
 
 interface Track {
     id: string;
     name: string;
-    artists: { name: string }[]; // List of artists for the track
-    album: { images: { url: string }[] }; // Image URL for the album cover
+    artists: { name: string }[];
+    album: { images: { url: string }[] };
     external_urls: { spotify: string };
 }
 
 const TopTracks = () => {
     const { accessToken } = useAuth();
     const navigate = useNavigate();
-    const [tracks, setTracks] = useState<Track[]>([]); // Renamed from 'artists' to 'tracks'
+    const [tracks, setTracks] = useState<Track[]>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         if (!accessToken) {
-            navigate("/"); // Redirect to login if no token is found
+            navigate("/");
             return;
         }
 
@@ -32,7 +32,7 @@ const TopTracks = () => {
         .then((response) => response.json())
         .then((data) => {
             if (data.items) {
-                setTracks(data.items); // Set tracks data instead of artists
+                setTracks(data.items);
             }
                 setLoading(false);
         })

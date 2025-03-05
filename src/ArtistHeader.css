@@ -8,16 +8,16 @@
   position: absolute;
   top: 0;
   left: 0;
-  width: 100vw; /* Full viewport width */
-  height: 50vh; /* Full viewport height */
+  width: 100vw;
+  height: 50vh;
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   display: flex;
-  align-items: center; /* Centers vertically */
-  padding-left: 5%; /* Moves content towards the left */
+  align-items: center;
+  padding-left: 5%;
   color: white;
-  justify-content: flex-start; /* Aligns everything to the left */
+  justify-content: flex-start;
 }
 
 .artist-info {

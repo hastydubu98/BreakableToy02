@@ -9,6 +9,7 @@
   width: 100%;
   justify-content: flex-start;
   align-items: flex-start;
+  flex-wrap: nowrap;
 }
 
 
@@ -22,6 +23,11 @@
   text-align: center;
   transition: transform 0.2s ease-in-out;
   scroll-snap-align: start;
+  min-width: 220px;
+}
+
+.artist-card:last-child {
+  margin-right: 50px;
 }
 
 .artist-card:hover {
@@ -60,6 +66,7 @@
 .main-content {
   padding-top: 50px;
   display: block;
-  width: 100vw;
+  width: 100%;
   left: 32px;
+  overflow-x: hidden;
 }
