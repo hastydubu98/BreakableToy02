@@ -20,7 +20,6 @@ interface Artist {
 const ArtistHeader = () => {
   const { accessToken } = useAuth();
   const { id } = useParams();
-  const navigate = useNavigate();
   const [artist, setArtist] = useState<Artist | null>(null);
   const [loading, setLoading] = useState(true);
 
