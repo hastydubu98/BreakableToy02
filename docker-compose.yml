@@ -1,0 +1,30 @@
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - SPOTIFY_CLIENT_ID=b2a51a7a34eb43cfb3746b96c63ccce1
+      - SPOTIFY_CLIENT_SECRET=24e867737074411eb1360183f0acb499
+    networks:
+      - app-network
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "9090:9090"
+    depends_on:
+      - backend
+    volumes:
+      - .:/app
+      - /app/node_modules
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+      - BACKEND_URL="http://backend:8080"
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
