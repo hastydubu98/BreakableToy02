@@ -33,7 +33,6 @@ public class Controller {
     private final String redirectUri = "http://localhost:8080/auth/spotify/callback";
     private final String scope = "user-top-read user-read-private"; // Add necessary scopes
 
-    // Step 1: Redirect the user to Spotify's authorization page
     @PostMapping("/auth/spotify")
     public ResponseEntity<Map<String, String>> initiateSpotifyLogin() {
         // Generate Spotify authorization URL
@@ -41,15 +40,14 @@ public class Controller {
                 .queryParam("client_id", clientId)
                 .queryParam("response_type", "code")
                 .queryParam("redirect_uri", redirectUri)
-                .queryParam("scope", "user-top-read user-read-private") // Add any necessary scopes here
-                .queryParam("state", "state_parameter_passthrough_value") // Optional, can be used for CSRF protection
+                .queryParam("scope", "user-top-read user-read-private")
+                .queryParam("state", "state_parameter_passthrough_value")
                 .toUriString();
 
         // Return the URL to the frontend so it can redirect the user
         return ResponseEntity.ok(Map.of("redirect_url", authUrl));
     }
 
-    // Step 2: Handle the callback from Spotify after user authentication
     @GetMapping("/auth/spotify/callback")
     public ResponseEntity<Void> spotifyCallback(@RequestParam("code") String code) {
         String frontendRedirectUrl = "http://localhost:9090/callback?code=" + code;

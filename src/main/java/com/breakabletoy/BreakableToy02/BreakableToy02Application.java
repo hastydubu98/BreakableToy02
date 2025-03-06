@@ -30,6 +30,4 @@ public class BreakableToy02Application {
 		return new CorsFilter(source);
 	}
 
-
-
 }
